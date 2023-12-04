@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+<style>
+        .pdf-viewer-container {
+            position: relative;
+        }
+
+        .rotated-icon {
+           transform: rotate(45deg); /* 아이콘을 45도 회전 */
+        }
+        .navigation-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            background: none;
+            border: none;
+        }
+
+        .btn-success {
+            background-color: orange;
+            border: none;  /* 테두리 제거 */
+
+        }
+
+        .btn-primary {
+            background-color: cornflowerblue;
+            border: none;  /* 테두리 제거 */
+
+        }
+
+        #previous-page-button {
+            left: 10px;
+        }
+        #next-page-button {
+            right: 10px;
+        }
+        canvas {
+            margin: 0 auto; /* 가운데 정렬 */
+            display: block;
+        }
+
+        .rotated-icon {
+            color: hotpink; /* 아이콘 색상 변경 */
+                vertical-align: middle; /* 아이콘 수직 정렬 */
+        }
+        .question-text {
+            color: deeppink; /* 텍스트 색상 변경 */
+            vertical-align: middle; /* 텍스트 수직 정렬 */
+            {#line-height: 2; /* 행간 추가 */#}
+        }
+
+        .rounded-image {
+            width: 300px; /* 이미지의 너비 */
+            height: 300px; /* 이미지의 높이 */
+            border-radius: 50%; /* 원 모양으로 만들기 */
+            object-fit: cover; /* 이미지 비율 유지 */
+        }
+
+
+    </style>
+
+</head>
+<body>
+{% csrf_token %}
+    <div class="container" style="max-width: 610px; margin-top:40px;">
+        <div class="card mb-4" >
+            <div class="card-body text-center">
+                {% if type_obj %}
+                    <img src="{{ type_obj.photo.url }}" alt="{{ type_obj.name }}" class="img-fluid rounded-image">
+                    <br><br>
+
+                    <p style="font-size: 18px;">
+                        <b style="font-size: 22px; color: orange;">{{ type_obj.name }}</b>와 같은
+                        <b style="font-size: 22px; color: cornflowerblue;">{{ type_obj.nick }}</b>
+                    </p>
+                    <div>
+                        <p>{{ type_obj.info1|safe }}</p>
+                    </div>
+                    <br>
+                    <div>
+
+                        <span class="material-symbols-outlined rotated-icon">push_pin</span>
+                        <p class="question-text" style="display: inline-block; margin: 0;">다이어리/플래너를 쓰면서 기분 좋은 순간은?</p>
+
+                         <p style="padding-top:10px">{{ type_obj.info2|safe }}</p>
+                    </div>
+                    <br>
+                    <div>
+                        <span class="material-symbols-outlined rotated-icon">push_pin</span>
+                        <p class="question-text" style="display: inline-block; margin: 0;">다이어리/플래너 작성이 힘들때는?</p>
+                        <p style="padding-top:10px">{{ type_obj.info3|safe }}</p>
+                    </div>
+                    <br>
+                    <div>
+                        <span class="material-symbols-outlined rotated-icon">push_pin</span>
+                        <p class="question-text" style="display: inline-block; margin: 0;">그래서 추천하는, 당신만의 다이어리 !!</p>
+                        <p style="padding-top:10px">{{ type_obj.info4|safe }}</p>
+                    </div>
+                    <div class="pdf-viewer-container">
+                        <canvas id="pdf-viewer"></canvas>
+                        <button id="previous-page-button" class="navigation-button">◀</button>
+                        <button id="next-page-button" class="navigation-button">►</button>
+                    </div>
+                {% else %}
+
+                    <p class="text-danger">결과에 해당하는 유형이 없습니다.</p>
+                {% endif %}
+            </div>
+        </div>
+        <button id="download-pdf-button" class="btn btn-success">PDF 다운로드</button>
+
+        <button id="reset-button" class="btn btn-primary" style="float: right;" >처음으로</button>
+    </div>
+
+    <script>
+        // CSRF 토큰 설정
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+        $('#reset-button').click(function() {
+            $.ajax({
+                url: '/reset_quiz/',  // 초기화 API endpoint
+                type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                success: function(data) {
+                    // Ajax 요청이 성공하면 페이지 이동
+                    window.location.href = '/quiz/';
+                }
+            });
+        });
+
+var pdfPath = '{{ type_obj.diary.url }}';
+        pdfjsLib.getDocument(pdfPath).promise.then(function(pdf) {
+            var currentPageIndex = 1; // 현재 페이지 인덱스 (1부터 시작)
+            var canvas = document.getElementById('pdf-viewer');
+            var context = canvas.getContext('2d');
+
+            function renderPage(pageNum) {
+                pdf.getPage(pageNum).then(function(page) {
+                    var scale = 0.5;
+                    var viewport = page.getViewport({ scale: scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            }
+
+            document.getElementById('previous-page-button').addEventListener('click', function() {
+                if (currentPageIndex > 1) {
+                    currentPageIndex--;
+                    renderPage(currentPageIndex);
+                }
+            });
+
+            document.getElementById('next-page-button').addEventListener('click', function() {
+                if (currentPageIndex < pdf.numPages) {
+                    currentPageIndex++;
+                    renderPage(currentPageIndex);
+                }
+            });
+
+            renderPage(currentPageIndex); // 초기 페이지 렌더링
+        });
+
+        document.getElementById('download-pdf-button').addEventListener('click', function() {
+            var link = document.createElement('a');
+            link.href = pdfPath; // 이미 정의된 PDF 파일의 경로
+            link.download = 'downloaded.pdf'; // 다운로드될 파일의 이름
+            link.dispatchEvent(new MouseEvent('click'));
+});
+
+    </script>
+
+</body>
+</html>

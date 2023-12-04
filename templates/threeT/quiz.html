@@ -1,0 +1,361 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&family=Nanum+Gothic&family=Nanum+Pen+Script&family=Poor+Story&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            position: relative;
+        }
+        .card-body {
+            padding-top: 0;  /* 상단 패딩 제거 */
+            padding-bottom:0;
+            height:100%;
+        }
+
+        h2.card-title {
+            font-family: "Nanum Pen Script";
+            text-align: center;
+            line-height: 0.7;  /* 행간을 조절, 값을 줄이면 행간이 줄어듭니다 */
+            font-size: 99px;
+            font-weight: bold;  /* 글씨를 두껍게 설정 */
+            text-align:center;
+            background-color: rgba(255, 255, 255, 0.8); /* 배경색을 흰색으로 설정하고 불투명도를 0.5로 조절 */
+            position: absolute;
+            top: 15%;  /* 이미지의 상단에 위치 */
+            left: 50%;
+            transform: translateX(-50%);  /* 수평 중앙 정렬 */
+            color: black;  /* 텍스트 색상 변경 */
+            z-index: 1;  /* 텍스트를 이미지 위로 올림 */
+        }
+
+        h3.card-title {
+            font-family: "Nanum Pen Script";
+            font-size: 60px;
+            text-align:center;
+            font-weight: bold;  /* 글씨를 두껍게 설정 */
+            line-height: 0.7;  /* 행간을 조절, 값을 줄이면 행간이 줄어듭니다 */
+            background-color: rgba(255, 255, 255, 0.8); /* 배경색을 흰색으로 설정하고 불투명도를 0.5로 조절 */
+            position: absolute;
+            top: 35%;  /* 이미지의 상단에 위치 */
+            left: 50%;
+            transform: translateX(-50%);  /* 수평 중앙 정렬 */
+            color: black;  /* 텍스트 색상 변경 */
+            z-index: 1;  /* 텍스트를 이미지 위로 올림 */
+            }
+
+        #main-image {
+            position: relative;
+            width: 100%;
+            height: auto;
+            margin-top:0px;
+            border-radius: 20px;  /* 모든 모서리를 둥글게 설정 */
+        }
+
+        #quiz-container {
+            max-width: 600px;
+            margin: auto;
+            padding-top:0px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        }
+
+
+         #question-text{
+            font-family: 'Nanum Gothic';
+            {#font-weight: bold;#}
+             color:white;
+            font-size: 16px;
+            text-align: center;
+            background-color: cornflowerblue;
+            line-height: 1.2;
+             padding-top: 12px; /* 상단 패딩 추가 */
+            {#padding-bottom: 10px; /* 하단 패딩 추가 */#}
+             height: 50px; /* 요소의 높이 설정 */
+
+        }
+
+
+        #start-button,#next-button, #previous-button, #end-button {
+            margin-top: 20px;
+        }
+
+        #start-button {
+            position: absolute;
+            top: 50%;           /* 상단으로부터 50% 위치에 배치 */
+            left: 50%;          /* 왼쪽으로부터 50% 위치에 배치 */
+            transform: translate(-50%, -50%); /* 위치 조정 */
+            background-color: grey;  /* 배경색을 회색으로 설정 */
+            color: white;      /* 글자색을 흰색으로 설정 */
+            width: 150px;      /* 버튼의 너비를 150픽셀로 설정 */
+            height: 50px;
+            {#font-family: 'Nanum Gothic', sans-serif;  /* 폰트를 '나눔고딕'으로 설정 */#}
+            font-size:20px;
+            background-color: #ff6347;  /* 배경색을 토마토색으로 변경 */
+            color: white;               /* 글자색을 흰색으로 변경 */
+            border: none;               /* 테두리 제거 */
+            border-radius: 25px;        /* 모서리를 둥글게 만들기 */
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);  /* 그림자 효과 추가 */
+            transition-duration: 0.4s;  /* 마우스 호버 시 애니메이션 효과 추가 */
+            }
+
+        #start-button:hover {
+            background-color: #ff4500; /* 마우스 호버 시 배경색을 주황색으로 변경 */
+        {#color: white;               /* 마우스 호버 시 글자색을 흰색으로 변경 */#}{#font-size: 28px#}
+        }
+
+        {##choices button {#}
+        {#    background-color: green; /* 배경 색상 */#}
+        {#    border-color: blue; /* 테두리 색상 */#}
+        {#    color: white; /* 글자 색상 */}#}
+        #choices button:hover {
+            background-color: rgb(230, 230, 230); /* 매우 밝은 회색 */
+            {#border-color: gray; /* 마우스 오버 시 테두리 색상 */#}
+            color: black;
+
+            /* color: white; 마우스 오버 시 글자 색상 */
+        }
+
+
+    </style>
+</head>
+<body>
+{% csrf_token %}
+    <div class="container py-1">
+        <div id="quiz-container" class="card">
+            <div class="card-body">
+                <div class="intro-page" id="intro-page" ><br>
+                    <h2 class="card-title"> NOTES <span style="font-size:60px;"> of </span> TITANS </h2>
+                    <h3 class="card-title"> with MBTI </h3>
+                    <img id="main-image" src="{% static 'img/main.jpeg' %}">
+                    <br><br>
+                    <p id="service-description">100% 내 마음에 쏙드는 다이어리, 플래너 찾기 힘드셨죠? <br>
+                        나만의 다이어리 성향을 알아보고 나와 비슷한 유형의 <b>타이탄</b>들은 <br>어떤 다이어리/플래너로 그들의 프로젝트나 일정관리를 했는지까지 알아볼까요? <br>
+                        <br>
+                        <span style="font-size: 20px;">나와 비슷한 타이탄들이 사용했을 노트, 우리도 직접 써보자구요 !</span></p>
+                    <button id="start-button" class="btn" style="float: right;"> START !</button>
+                </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; ">
+                <button id="previous-button" class="btn btn-secondary">이전</button>
+                <span id="question-number" style="display:none; position: absolute; left: 50%; transform: translateX(-50%);">1 / 12</span>
+                <button id="next-button" class="btn btn-primary">다음</button>
+            </div>
+                <br><br>
+                <!-- 퀴즈 페이지 -->
+            <div class="quiz_text_container">
+                {% for question in questions %}
+                  <div id="quiz-page-{{ forloop.counter0 }}" style="display: none;">
+                    {% if question.logo_url %}
+                      <img src="{{ question.logo_url }}" alt="Logo" style="width:100%">
+                    {% endif %}
+                  <br><br>
+                      <h2 id="question-text">{{ question.variable|safe }}</h2>
+                  </div>
+                {% endfor %}
+                    <div id="choices" class="mt-4" style="font-size :40px;">
+                    </div>
+                <button id="end-button" class="btn btn-success" style="display: none; float: right;">결과 보기</button>
+            </div>
+        </div>
+    </div>
+<script>
+    $('#start-button').click(function() {
+        $('#intro-page').hide(); // 첫 페이지 숨기기
+        $('#quiz-page').show(); // 퀴즈 페이지 보여주기
+        $('#question-number').show(); // 퀴즈 페이지 보여주기
+        $(this).hide(); // 퀴즈 시작 버튼 숨기기
+        $('#next-button').show(); // 다음 버튼 보이기
+        $('#next-button').click(); // '다음' 버튼 클릭 이벤트 자동 실행
+
+        // 퀴즈 페이지 보여주기
+        $('#quiz-page-' + questionId).show();
+    });
+</script>
+
+    <script>
+        var questionId = 0; // 첫 번째 문제를 불러옴
+        var totalQuestions = 12; // 전체 문제 수
+        var userSelections = {}; // 사용자의 선택을 저장하는 객체
+
+        function updateQuestionNumberDisplay() {
+           $('#question-number').text((questionId ) + ' / ' + totalQuestions);
+            }
+
+        $('#next-button').click(function() {
+            $('#service-description').hide(); // 문제 시작 시 문제 설명 숨기기
+            $('#main-image').hide();
+            $('#question-number').text((questionId ) + ' / ' + totalQuestions); // 현재 문제 번호와 총 문제 수 업데이트
+
+            $.ajax({
+                url: '/get_next_question/' + questionId + '/',
+                type: 'GET',
+                success: function(data) {
+                    if (data.next_question_id === null) {
+                        // 문제를 더 이상 불러올 수 없다면 결과 페이지로 이동
+                        window.location.href = '/review_page/';
+                        return;
+                    }
+
+                    if (data.logo_url) {
+                        $("#quiz-page-" + questionId + " img").attr("src", data.logo_url);
+                    }
+
+                    $('#question-text').html(data.question_text);
+                    var choices = $('#choices');
+                    choices.empty();
+                    for (var i = 0; i < data.choices.length; i++) {
+                        {#var button = $('<button class="btn btn-light btn-block" value="' + data.choices[i] + '">' + data.choices[i] + '</button>');#}
+                        var button = $('<button class="btn btn-light btn-block" value="' + (i + 1) + '">' + data.choices[i] + '</button>');
+                        choices.append(button);
+                    }
+
+                    questionId = data.next_question_id; // 다음 문제 ID를 업데이트
+                    updateQuestionNumberDisplay(); // 문제 번호 표시 업데이트
+
+                    if (questionId > totalQuestions) { // 문제를 모두 풀었을 경우
+                        $('#next-button').hide(); // 다음 버튼을 숨김
+                        $('#end-button').show(); // 결과 보기 버튼을 표시
+                    }
+
+                    if (questionId > 0) { // 첫 번째 문제가 아닐 경우
+                        $('#previous-button').show(); // 이전 버튼을 표시
+                    }
+                }
+            });
+        });
+
+        $('#previous-button').click(function() {
+            $('#question-number').text((questionId ) + ' / ' + totalQuestions); // 현재 문제 번호와 총 문제 수 업데이트
+
+            $.ajax({
+                url: '/get_previous_question/' + questionId + '/',
+                type: 'GET',
+                success: function(data) {
+                    if (data.previous_question_id === null) {
+                        // 이전 문제가 없으면 아무 동작도 하지 않음
+                        return;
+                    }
+
+                    if (data.logo_url) {
+                        $("#quiz-page-" + questionId + " img").attr("src", data.logo_url);
+                    }
+
+                    $('#question-text').html(data.question_text);
+                    var choices = $('#choices');
+                    choices.empty();
+                    for (var i = 0; i < data.choices.length; i++) {
+                        var button = $('<button class="btn btn-light btn-block" value="' + data.choices[i] + '">' + data.choices[i] + '</button>');
+                        {#var button = $('<button class="btn btn-light btn-block" value="' + (i + 1) + '번">' + (i + 1) + '번. ' + data.choices[i] + '</button>');#}
+
+
+                        choices.append(button);
+                    }
+
+                    questionId = data.previous_question_id; // 이전 문제 ID를 업데이트
+                    updateQuestionNumberDisplay(); // 문제 번호 표시 업데이트
+
+                    if (questionId === 0) { // 첫 번째 문제일 경우
+                        $('#previous-button').hide(); // 이전 버튼을 숨김
+                    }
+
+                    if (questionId < totalQuestions) { // 마지막 문제가 아닐 경우
+                        $('#next-button').show(); // 다음 버튼을 표시
+                        $('#end-button').hide(); // 결과 보기 버튼을 숨김
+                    }
+                }
+            });
+        });
+
+        // 사용자가 선택을 클릭할 때마다 호출되는 함수
+        function sendChoiceToServer(choice) {
+            $.ajax({
+                url: '/save_choice/',
+                type: 'POST',
+                data: {
+                    'choice': choice
+                },
+                success: function(response) {
+                    // 서버로부터의 응답 처리
+                }
+            });
+        }
+
+        // 사용자의 선택을 처리하는 이벤트 핸들러
+        $('#choices').on('click', 'button', function() {
+            var choice = $(this).val();
+            sendChoiceToServer(choice); // 서버에 선택을 보냄
+            userSelections[questionId] = choice; // 사용자의 선택을 저장
+            console.log('User Selections:', userSelections);
+        });
+
+    </script>
+        
+    <script>$.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", $('[name=csrfmiddlewaretoken]').val());
+            }
+        }
+    });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#service-description').show(); // 첫 페이지에서 문제 설명 보이기
+            $('#main-image').attr('src', '{% static "img/main.jpeg" %}'); // 이미지 경로 설정
+            $('#next-button').hide(); // 첫 페이지에서 다음 버튼 숨기기
+
+            if (questionId === 0) { // 첫 번째 문제일 경우
+                $('#previous-button').hide(); // 이전 버튼을 숨김
+            }
+        });
+    </script>
+    <script>
+        $('#choices').on('click', 'button', function() {
+        // 모든 버튼의 'btn-success' 클래스 제거
+        $('#choices button').removeClass('btn-success').addClass('btn-light');
+
+        // 클릭된 버튼에 'btn-success' 클래스 추가
+        $(this).removeClass('btn-light').addClass('btn-success');
+    });
+    </script>
+    <script>
+        $('#next-button').prop('disabled', true); // 기본적으로 '다음' 버튼을 비활성화 합니다.
+
+        $('#choices').on('click', 'button', function() {
+            // 모든 버튼의 'btn-success' 클래스 제거
+            $('#choices button').removeClass('btn-success').addClass('btn-light');
+
+            // 클릭된 버튼에 'btn-success' 클래스 추가
+            $(this).removeClass('btn-light').addClass('btn-success');
+
+            // 보기를 선택했으므로 '다음' 버튼을 활성화합니다.
+            $('#next-button').prop('disabled', false);
+            $('#next-button').click();
+
+
+        });
+
+        $('#next-button').click(function() {
+            // '다음' 버튼을 클릭하면 다시 '다음' 버튼을 비활성화 합니다.
+            $(this).prop('disabled', true);
+        });
+    </script>
+
+
+
+</body>
+</html>
