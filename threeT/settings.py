@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*x@xux&uvrqm16#gqn#dypy9=(26vg^k-gjvsbtvcm7+c)(xv&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['threeT-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
+# ALLOWED_HOSTS = ['threet-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
