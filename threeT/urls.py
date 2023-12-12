@@ -30,6 +30,9 @@ urlpatterns = [
     path('get_previous_question/<int:question_id>/', views.get_previous_question, name='get_previous_question'),
     path('review_page/', views.review_page, name='review_page'),
     path('save_choice/', views.save_choice, name='save_choice'),
+
+  path('ads.txt',views.Ads),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,20 +4,11 @@ from .models import Question, Choice, UserChoice, Type
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
-# def reset_quiz(request):
-#     # 사용자의 UserChoice 모델 정보를 초기화
-#     UserChoice.objects.filter(user=request.user).delete()
-#     # 세션에 저장된 사용자의 선택도 초기화
-#     request.session['user_choices'] = []
-#     # 퀴즈의 첫 페이지로 리다이렉트하지 않고 성공 응답을 반환
-#     return JsonResponse({'success': True})
-
 def reset_quiz(request):
     # 세션에 저장된 사용자의 선택을 초기화
     request.session['user_choices'] = []
     # 퀴즈의 첫 페이지로 리다이렉트하지 않고 성공 응답을 반환
     return JsonResponse({'success': True})
-
 
 
 def get_next_question(request, question_id):
@@ -129,3 +120,8 @@ def review_page(request):
         'result': result,
         'type_obj': type_obj,
     })
+
+from django.http import HttpResponse
+
+def Ads(request):
+    return HttpResponse("google.com, pub-8675980791052309, DIRECT, f08c47fec0942fa0")
