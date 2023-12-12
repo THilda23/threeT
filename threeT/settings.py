@@ -27,7 +27,7 @@ DEBUG = False
 
 # ALLOWED_HOSTS = ['threeT-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
 # ALLOWED_HOSTS = ['threet-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'thilda.pythonanywhere.com']
 
 
 # Application definition
