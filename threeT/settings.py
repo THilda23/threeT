@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'threeT',
     'import_export',
 
+
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

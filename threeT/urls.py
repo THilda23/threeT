@@ -21,6 +21,9 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.views.generic.base import RedirectView
+
+
 urlpatterns = [
     path('', views.quiz, name='quiz'),  # 이 부분을 추가합니다.
     path('quiz/', views.quiz, name='quiz'),
@@ -31,9 +34,10 @@ urlpatterns = [
     path('review_page/', views.review_page, name='review_page'),
     path('save_choice/', views.save_choice, name='save_choice'),
 
-  path('ads.txt',views.Ads),
+    path('ads.txt',views.Ads),
+    path('sitemap.xml', RedirectView.as_view(url='/sitemap.xml', permanent=False), name='django.contrib.sitemaps.views.sitemap'),
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
