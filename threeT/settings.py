@@ -24,10 +24,11 @@ SECRET_KEY = 'django-insecure-*x@xux&uvrqm16#gqn#dypy9=(26vg^k-gjvsbtvcm7+c)(xv&
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+#배포할땐 False
 
 # ALLOWED_HOSTS = ['threeT-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
 # ALLOWED_HOSTS = ['threet-env.eba-scpaf9mb.ap-northeast-2.elasticbeanstalk.com']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'thilda.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'everylife.pythonanywhere.com']
 
 
 # Application definition

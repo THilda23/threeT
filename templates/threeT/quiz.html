@@ -158,9 +158,14 @@
             <div class="quiz_text_container">
                 {% for question in questions %}
                   <div id="quiz-page-{{ forloop.counter0 }}" style="display: none;">
-                    {% if question.logo_url %}
-                      <img src="{{ question.logo_url }}" alt="Logo" style="width:100%">
-                    {% endif %}
+{#                    {% if question.logo_url %}#}
+{#                      <img src="{{ question.logo_url }}" alt="Logo" style="width:100%">#}
+{#                    {% endif %}#}
+                      <!-- Django 템플릿에서 각 질문에 해당하는 이미지 태그 -->
+{#                    <img id="question-image-{{ forloop.counter0 }}" src="{{ question.logo_url }}" alt="logo" style="width:100%">#}
+
+                    <img id="question-image-{{ forloop.counter0|add:"1" }}" src="{{ question.logo_url }}" alt="logo" style="width:100%">
+
                   <br><br>
                       <h2 id="question-text">{{ question.variable|safe }}</h2>
                   </div>
@@ -179,7 +184,6 @@
         $(this).hide(); // 퀴즈 시작 버튼 숨기기
         $('#next-button').show(); // 다음 버튼 보이기
         $('#next-button').click(); // '다음' 버튼 클릭 이벤트 자동 실행
-
         // 퀴즈 페이지 보여주기
         $('#quiz-page-' + questionId).show();
     });
@@ -203,15 +207,18 @@
                 url: '/get_next_question/' + questionId + '/',
                 type: 'GET',
                 success: function(data) {
+                    if (data.logo_url) {
+                            console.log("questionId: ", questionId);
+                            console.log("logo_url: ", data.logo_url);
+                       $("#question-image-" + questionId).attr("src", data.logo_url);
+                     }
+
                     if (data.next_question_id === null) {
                         // 문제를 더 이상 불러올 수 없다면 결과 페이지로 이동
                         window.location.href = '/review_page/';
                         return;
                     }
 
-                    if (data.logo_url) {
-                        $("#quiz-page-" + questionId + " img").attr("src", data.logo_url);
-                    }
 
                     $('#question-text').html(data.question_text);
                     var choices = $('#choices');

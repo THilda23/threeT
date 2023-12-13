@@ -50,6 +50,7 @@ def quiz(request):
             'variable': question.question_text,
             'logo_url': question.question_logo.url if question.question_logo else None,
         })
+        # print(context)
     return render(request, 'threeT/quiz.html', {'questions': context})
 
 @require_POST
@@ -80,12 +81,6 @@ def review_page(request):
     answer_string = 'EEII/EEI/EIE/JPJ/SNSN/NNSS/TFTF/SNS/TFTF/JPJP/FFT/PPJJ'
     answer_list = answer_string.split('/')
 
-    # 점수 매핑
-    # for question, choice in user_choices_text_list:
-    #     question_index = int(question[:-1]) - 1
-    #     if question_index < len(answer_list):
-    #         type_char = answer_list[question_index][choice - 1]
-    #         scores[type_char] += 1
     try:
         # 매핑 로직
         for question, choice in user_choices_text_list:
